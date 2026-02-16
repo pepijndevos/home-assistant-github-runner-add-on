@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.6.1] - 2026-02-16
+- Added USB device access (usb: true) for openFPGALoader JTAG via libftdi/libusb
+
 ## [1.6.0] - 2026-02-16
 - Added make, openFPGALoader, gawk, and coreutils for FPGA hardware-in-the-loop testing
 
