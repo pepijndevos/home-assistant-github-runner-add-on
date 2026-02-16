@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.6.0] - 2026-02-16
+- Added make, openFPGALoader, gawk, and coreutils for FPGA hardware-in-the-loop testing
+
 ## [1.5.2] - 2025-10-24
 - Added Node.js and npm to support GitHub Actions composite actions (fixes setup-terraform and similar actions)
 
