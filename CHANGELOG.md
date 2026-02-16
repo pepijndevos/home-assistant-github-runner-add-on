@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.6.5] - 2026-02-16
+- Fixed USB/serial permissions: host GIDs don't match container, chmod devices at startup
+
 ## [1.6.4] - 2026-02-16
 - Added USB/serial device diagnostics logging on startup
 

@@ -108,6 +108,11 @@ bashio::log.info "FTDI USB devices (lsusb):"
 lsusb 2>&1 | grep -i ftdi | while read line; do bashio::log.info "  $line"; done || bashio::log.info "  (lsusb not available or no FTDI devices)"
 bashio::log.info "================================="
 
+# Fix device permissions: host GIDs don't match container GIDs,
+# and /dev/bus/usb is root:root. Grant runner access directly.
+chmod a+rw /dev/bus/usb/*/* 2>/dev/null || true
+chmod a+rw /dev/ttyUSB* 2>/dev/null || true
+
 # Change to runner directory
 cd /runner
 
