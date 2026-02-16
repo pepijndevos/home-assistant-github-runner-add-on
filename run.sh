@@ -93,6 +93,21 @@ if [ "$DEBUG_LOGGING" = "true" ]; then
     bashio::log.info "========================="
 fi
 
+# Log USB/serial device info for HIL debugging
+bashio::log.info "=== Device access diagnostics ==="
+bashio::log.info "Runner user: $(su runner -c 'id')"
+if [ -d /dev/bus/usb ]; then
+    bashio::log.info "USB bus devices:"
+    find /dev/bus/usb -type c -exec ls -la {} \; 2>&1 | while read line; do bashio::log.info "  $line"; done
+else
+    bashio::log.warning "/dev/bus/usb does not exist in container"
+fi
+bashio::log.info "Serial devices:"
+ls -la /dev/ttyUSB* /dev/ttyACM* 2>&1 | while read line; do bashio::log.info "  $line"; done
+bashio::log.info "FTDI USB devices (lsusb):"
+lsusb 2>&1 | grep -i ftdi | while read line; do bashio::log.info "  $line"; done || bashio::log.info "  (lsusb not available or no FTDI devices)"
+bashio::log.info "================================="
+
 # Change to runner directory
 cd /runner
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.6.4] - 2026-02-16
+- Added USB/serial device diagnostics logging on startup
+
 ## [1.6.3] - 2026-02-16
 - Added runner user to plugdev/dialout groups for USB and serial device access
 

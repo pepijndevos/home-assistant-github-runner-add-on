@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openfpgaloader \
     gawk \
     coreutils \
+    usbutils \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user for running the GitHub Actions runner
