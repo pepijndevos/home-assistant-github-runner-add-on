@@ -95,7 +95,7 @@ fi
 
 # Log USB/serial device info for HIL debugging
 bashio::log.info "=== Device access diagnostics ==="
-bashio::log.info "Runner user: $(su runner -c 'id')"
+bashio::log.info "Running as: $(id)"
 if [ -d /dev/bus/usb ]; then
     bashio::log.info "USB bus devices:"
     find /dev/bus/usb -type c -exec ls -la {} \; 2>&1 | while read line; do bashio::log.info "  $line"; done
@@ -108,22 +108,16 @@ bashio::log.info "FTDI USB devices (lsusb):"
 lsusb 2>&1 | grep -i ftdi | while read line; do bashio::log.info "  $line"; done || bashio::log.info "  (lsusb not available or no FTDI devices)"
 bashio::log.info "================================="
 
-# Fix device permissions: host GIDs don't match container GIDs,
-# and /dev/bus/usb is root:root. Grant runner access directly.
-chmod a+rw /dev/bus/usb/*/* 2>/dev/null || true
-chmod a+rw /dev/ttyUSB* 2>/dev/null || true
-
 # Change to runner directory
 cd /runner
 
-# Ensure runner user owns the top-level directory (skip -R to avoid
-# slow recursive chown over _work artifacts on every restart)
-chown runner:runner /runner
+# Run as root inside the container — the container is the security boundary,
+# and root is needed for USB/serial device access (openFPGALoader, UART).
+export RUNNER_ALLOW_RUNASROOT=1
 
 # Persistent storage for runner configuration
 RUNNER_CONFIG_DIR="/data/runner-config"
 mkdir -p "$RUNNER_CONFIG_DIR"
-chown runner:runner "$RUNNER_CONFIG_DIR"
 
 # Function to configure the runner
 configure_runner() {
@@ -147,7 +141,7 @@ configure_runner() {
     CONFIG_CMD="${CONFIG_CMD} --unattended --replace"
     
     # Execute configuration
-    if ! su runner -c "${CONFIG_CMD}"; then
+    if ! eval "${CONFIG_CMD}"; then
         return 1
     fi
     
@@ -156,7 +150,6 @@ configure_runner() {
     cp -f .runner "$RUNNER_CONFIG_DIR/" 2>/dev/null || true
     cp -f .credentials "$RUNNER_CONFIG_DIR/" 2>/dev/null || true
     cp -f .credentials_rsaparams "$RUNNER_CONFIG_DIR/" 2>/dev/null || true
-    chown runner:runner "$RUNNER_CONFIG_DIR"/.* 2>/dev/null || true
     
     # Extract and display the runner name
     if [ -f ".runner" ]; then
@@ -176,7 +169,6 @@ restore_runner_config() {
         cp -f "$RUNNER_CONFIG_DIR/.runner" . 2>/dev/null || return 1
         cp -f "$RUNNER_CONFIG_DIR/.credentials" . 2>/dev/null || return 1
         cp -f "$RUNNER_CONFIG_DIR/.credentials_rsaparams" . 2>/dev/null || true
-        chown runner:runner .runner .credentials .credentials_rsaparams 2>/dev/null || true
         
         # Extract and display the runner name
         if [ -f ".runner" ]; then
@@ -206,7 +198,7 @@ start_runner() {
     fi
     
     # Try to start the runner in the background to capture PID
-    su runner -c "./run.sh" &
+    ./run.sh &
     RUNNER_PID=$!
     
     # Wait for the runner process
@@ -224,7 +216,7 @@ start_runner() {
             
             if configure_runner; then
                 bashio::log.info "Runner re-registered successfully! Starting runner..."
-                su runner -c "./run.sh" &
+                ./run.sh &
                 RUNNER_PID=$!
                 wait "$RUNNER_PID"
                 return $?

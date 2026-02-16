@@ -1,13 +1,9 @@
 # Changelog
 
-## [1.6.5] - 2026-02-16
-- Fixed USB/serial permissions: host GIDs don't match container, chmod devices at startup
-
-## [1.6.4] - 2026-02-16
-- Added USB/serial device diagnostics logging on startup
-
-## [1.6.3] - 2026-02-16
-- Added runner user to plugdev/dialout groups for USB and serial device access
+## [1.7.0] - 2026-02-16
+- Run GitHub Actions runner as root inside the container for USB/serial device access
+- Removed user switching (su runner) and permission workarounds
+- Device access diagnostics logged on startup
 
 ## [1.6.2] - 2026-02-16
 - Fixed slow startup: removed recursive chown of /runner on every boot
