@@ -27,7 +27,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user for running the GitHub Actions runner
-RUN useradd -m -u 1000 runner
+# Add to plugdev/dialout for USB and serial device access (openFPGALoader, UART)
+RUN useradd -m -u 1000 -G plugdev,dialout runner
 
 # Set up runner directory
 RUN mkdir -p /runner && chmod 755 /runner

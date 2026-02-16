@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.6.3] - 2026-02-16
+- Added runner user to plugdev/dialout groups for USB and serial device access
+
 ## [1.6.2] - 2026-02-16
 - Fixed slow startup: removed recursive chown of /runner on every boot
 
