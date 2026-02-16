@@ -12,6 +12,7 @@ arch:
 init: false
 startup: services
 boot: auto
+uart: true
 hassio_api: true
 hassio_role: default
 panel_icon: mdi:github
