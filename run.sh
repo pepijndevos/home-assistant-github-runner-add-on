@@ -96,8 +96,9 @@ fi
 # Change to runner directory
 cd /runner
 
-# Ensure runner user owns the directory
-chown -R runner:runner /runner
+# Ensure runner user owns the top-level directory (skip -R to avoid
+# slow recursive chown over _work artifacts on every restart)
+chown runner:runner /runner
 
 # Persistent storage for runner configuration
 RUNNER_CONFIG_DIR="/data/runner-config"
