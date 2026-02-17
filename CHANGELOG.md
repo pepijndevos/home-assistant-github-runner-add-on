@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.0] - 2026-02-17
+- Switched base image from Debian Bookworm to Trixie for openFPGALoader 0.13.1 (adds tangnano20k support)
+
 ## [1.7.0] - 2026-02-16
 - Run GitHub Actions runner as root inside the container for USB/serial device access
 - Removed user switching (su runner) and permission workarounds
