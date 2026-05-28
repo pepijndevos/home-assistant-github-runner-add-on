@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.1] - 2026-05-28
+- Added privileged use for vpn support, tested with WireGuard. 
+
 ## [1.8.0] - 2026-02-17
 - Switched base image from Debian Bookworm to Trixie for openFPGALoader 0.13.1 (adds tangnano20k support)
 
