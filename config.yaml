@@ -9,38 +9,27 @@ arch:
   - armhf
   - armv7
   - i386
-
 init: false
 startup: services
 boot: auto
-
-# Nodig voor WireGuard: netwerkinterfaces zoals wg0 kunnen aanmaken.
 privileged:
   - NET_ADMIN
-
-# Nodig voor /dev/net/tun, zodat WireGuard een tunnel-interface kan gebruiken.
 devices:
   - /dev/net/tun
-
 uart: true
 usb: true
-
 hassio_api: true
 hassio_role: default
-
 panel_icon: mdi:github
-
 map:
   - timezone:ro
   - share:rw
-
 options:
   repo_url: ""
   runner_token: ""
   runner_name: ""
   runner_labels: ""
   debug_logging: false
-
 schema:
   repo_url: str
   runner_token: str
