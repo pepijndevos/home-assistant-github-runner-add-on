@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.1] - 2026-11-15
+- Fixed crash loop on startup when no /dev/ttyUSB* device is present (device diagnostics no longer abort the script)
+
 ## [1.8.0] - 2026-02-17
 - Switched base image from Debian Bookworm to Trixie for openFPGALoader 0.13.1 (adds tangnano20k support)
 

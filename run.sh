@@ -103,7 +103,7 @@ else
     bashio::log.warning "/dev/bus/usb does not exist in container"
 fi
 bashio::log.info "Serial devices:"
-ls -la /dev/ttyUSB* /dev/ttyACM* 2>&1 | while read line; do bashio::log.info "  $line"; done
+ls -la /dev/ttyUSB* /dev/ttyACM* 2>&1 | while read line; do bashio::log.info "  $line"; done || true
 bashio::log.info "FTDI USB devices (lsusb):"
 lsusb 2>&1 | grep -i ftdi | while read line; do bashio::log.info "  $line"; done || bashio::log.info "  (lsusb not available or no FTDI devices)"
 bashio::log.info "================================="
