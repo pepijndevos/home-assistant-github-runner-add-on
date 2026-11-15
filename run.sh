@@ -150,6 +150,8 @@ configure_runner() {
     cp -f .runner "$RUNNER_CONFIG_DIR/" 2>/dev/null || true
     cp -f .credentials "$RUNNER_CONFIG_DIR/" 2>/dev/null || true
     cp -f .credentials_rsaparams "$RUNNER_CONFIG_DIR/" 2>/dev/null || true
+    # Remember which token this registration came from; a new token forces re-registration
+    printf '%s' "$RUNNER_TOKEN" > "$RUNNER_CONFIG_DIR/token"
     
     # Extract and display the runner name
     if [ -f ".runner" ]; then
@@ -164,6 +166,13 @@ configure_runner() {
 
 # Function to restore runner configuration
 restore_runner_config() {
+    # The runner's run.sh exits 0 when GitHub has deleted the registration, so a
+    # stale config can't be detected from the exit code. A new token is the
+    # user's signal to re-register instead.
+    if [ "$RUNNER_TOKEN" != "$(cat "$RUNNER_CONFIG_DIR/token" 2>/dev/null)" ]; then
+        bashio::log.info "Runner token changed, discarding existing runner configuration"
+        return 1
+    fi
     if [ -f "$RUNNER_CONFIG_DIR/.runner" ] && [ -f "$RUNNER_CONFIG_DIR/.credentials" ]; then
         bashio::log.info "Found existing runner configuration, attempting to restore..."
         cp -f "$RUNNER_CONFIG_DIR/.runner" . 2>/dev/null || return 1

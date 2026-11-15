@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.2] - 2026-11-15
+- Re-register the runner when the configured token changes; a registration deleted by GitHub could otherwise never be replaced, since the runner exits 0 in that case
+
 ## [1.8.1] - 2026-11-15
 - Fixed crash loop on startup when no /dev/ttyUSB* device is present (device diagnostics no longer abort the script)
 
