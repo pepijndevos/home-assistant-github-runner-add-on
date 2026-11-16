@@ -1,4 +1,20 @@
 ARG BUILD_FROM
+
+# Build openFPGALoader from source: Debian's 0.13.1 cannot select between
+# several DirtyJTAG probes. Pinned to trabucayre/openFPGALoader#762.
+FROM $BUILD_FROM AS openfpgaloader
+ARG OPENFPGALOADER_REPO=https://github.com/pepijndevos/openFPGALoader.git
+ARG OPENFPGALOADER_REF=e905ec1f28de3b9bebe8d388d6a02cd49be7008c
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates git cmake g++ make pkg-config \
+    libftdi1-dev libusb-1.0-0-dev libhidapi-dev libudev-dev zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+RUN git clone "$OPENFPGALOADER_REPO" /src \
+    && git -C /src checkout "$OPENFPGALOADER_REF" \
+    && cmake -S /src -B /build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local \
+    && cmake --build /build -j"$(nproc)" \
+    && DESTDIR=/out cmake --install /build
+
 FROM $BUILD_FROM
 
 # Set shell
@@ -21,11 +37,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     npm \
     # HIL test dependencies
     make \
-    openfpgaloader \
+    libftdi1-2 \
+    libusb-1.0-0 \
+    libhidapi-libusb0 \
+    libudev1 \
     gawk \
     coreutils \
     usbutils \
     && rm -rf /var/lib/apt/lists/*
+
+COPY --from=openfpgaloader /out/usr/local/ /usr/local/
+RUN openFPGALoader --help | grep -q usb-serial-num
 
 # Create a non-root user for running the GitHub Actions runner
 # Add to plugdev/dialout for USB and serial device access (openFPGALoader, UART)

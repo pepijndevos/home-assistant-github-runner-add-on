@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.9.0] - 2026-11-16
+- Build openFPGALoader from source, pinned to trabucayre/openFPGALoader#762, so `--usb-serial-num` can select between several DirtyJTAG probes
+
 ## [1.8.2] - 2026-11-15
 - Re-register the runner when the configured token changes; a registration deleted by GitHub could otherwise never be replaced, since the runner exits 0 in that case
 
