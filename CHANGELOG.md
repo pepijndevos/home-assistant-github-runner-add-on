@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.9.1] - 2026-11-20
+- Pin openFPGALoader to trabucayre/openFPGALoader#768 (on top of the merged #762), so compressed Gowin bitstreams with a zero key load instead of failing with "can't parse file"
+
 ## [1.9.0] - 2026-11-16
 - Build openFPGALoader from source, pinned to trabucayre/openFPGALoader#762, so `--usb-serial-num` can select between several DirtyJTAG probes
 

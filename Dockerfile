@@ -1,10 +1,12 @@
 ARG BUILD_FROM
 
 # Build openFPGALoader from source: Debian's 0.13.1 cannot select between
-# several DirtyJTAG probes. Pinned to trabucayre/openFPGALoader#762.
+# several DirtyJTAG probes (trabucayre/openFPGALoader#762, merged). Pinned to
+# trabucayre/openFPGALoader#768 on top of it, which loads compressed Gowin
+# bitstreams that have a zero key.
 FROM $BUILD_FROM AS openfpgaloader
 ARG OPENFPGALOADER_REPO=https://github.com/pepijndevos/openFPGALoader.git
-ARG OPENFPGALOADER_REF=e905ec1f28de3b9bebe8d388d6a02cd49be7008c
+ARG OPENFPGALOADER_REF=ac8eab2abad8f7e8cb4d5b1e4e2c16d0b874531f
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates git cmake g++ make pkg-config \
     libftdi1-dev libusb-1.0-0-dev libhidapi-dev libudev-dev zlib1g-dev \
